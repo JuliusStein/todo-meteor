@@ -1,53 +1,79 @@
 <script>
   import { TasksCollection } from '../api/TasksCollection';
+  import { Meteor } from 'meteor/meteor';
   import Task from './Task.svelte';
   import TaskForm from './TaskForm.svelte';
+  import LoginForm from './LoginForm.svelte';
 
-  // This is a reactive data source
   let hideCompleted = false;
-  const setHideCompleted = value =>  {
-        hideCompleted = value;
-    }
 
-  // This helper function returns the number of incomplete tasks
   const hideCompletedFilter = { isChecked: { $ne: true } };
+
+
   let incompleteCount;
-    let pendingTasksTitle = '';
-    let tasks = [];
-    // This autorun function will run every time the number of incomplete tasks changes
-    $m: {
-        tasks = TasksCollection.find(hideCompleted ? hideCompletedFilter : {}, { sort: { createdAt: -1 } }).fetch()
+  let pendingTasksTitle = '';
+  let tasks = [];
+  let user = null;
 
-        incompleteCount = TasksCollection.find(hideCompletedFilter).count();
+  $m: {
+    user = Meteor.user();
 
-        pendingTasksTitle = `${
-                incompleteCount ? ` (${incompleteCount})` : ''
-        }`;
-    }
+    const userFilter = user ? { userId: user._id } : {};
+    const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
+
+
+    tasks = user
+      ? TasksCollection.find(
+            hideCompleted ? pendingOnlyFilter : userFilter,
+            { sort: { createdAt: -1 } }
+        ).fetch()
+      : [];
+
+    incompleteCount = user
+        ? TasksCollection.find(pendingOnlyFilter).count()
+        : 0;
+
+    pendingTasksTitle = `${
+      incompleteCount ? ` (${incompleteCount})` : ''
+    }`;
+  }
+
+  const setHideCompleted = value => {
+    hideCompleted = value;
+  };
+  const logout = () => Meteor.logout();
 </script>
 
 
 <div class="app">
-  <header>
-      <div class="app-bar">
-          <div class="app-header">
-              <h1>📝️ To Do List {pendingTasksTitle}</h1>
-          </div>
-      </div>
-  </header>
+    <header>
+        <div class="app-bar">
+            <div class="app-header">
+                <h1>📝️ To Do List {pendingTasksTitle}</h1>
+            </div>
+        </div>
+    </header>
 
-  <div class="main">  
-      <TaskForm /> 
-      <div class="filter"> 
-        <button on:click={() => setHideCompleted(!hideCompleted)}>
-            {hideCompleted ? 'Show All' : 'Hide Completed'}
-        </button>
+    <div class="main">
+        {#if user}
+            <div class="user" on:click={logout}>
+                {user.username} 🚪
+            </div>
+
+            <TaskForm user={user}/>
+
+            <div class="filter">
+                <button on:click={() => setHideCompleted(!hideCompleted)}>
+                    {hideCompleted ? 'Show All' : 'Hide Completed'}
+                </button>
+            </div>
+            <ul class="tasks">
+              {#each tasks as task (task._id)}
+                  <Task task={task} />
+              {/each}
+            </ul>
+        {:else}
+            <LoginForm />
+        {/if}
     </div>
-
-      <ul class="tasks">
-          {#each tasks as task (task._id)}
-              <Task task={task} />
-          {/each}
-      </ul>
-  </div>
 </div>
