@@ -9,12 +9,12 @@
 
   const hideCompletedFilter = { isChecked: { $ne: true } };
 
-
   let incompleteCount;
   let pendingTasksTitle = '';
   let tasks = [];
   let user = null;
 
+  // This autorun will run every time the user logs in or out and updates the user variable
   $m: {
     user = Meteor.user();
 
@@ -49,6 +49,7 @@
     <header>
         <div class="app-bar">
             <div class="app-header">
+                <!-- Show the number of tasks in the title bar-->
                 <h1>📝️ To Do List {pendingTasksTitle}</h1>
             </div>
         </div>
@@ -56,23 +57,27 @@
 
     <div class="main">
         {#if user}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="user" on:click={logout}>
                 {user.username} 🚪
             </div>
 
             <TaskForm user={user}/>
 
+            <!-- Hide Completed Filter -->
             <div class="filter">
                 <button on:click={() => setHideCompleted(!hideCompleted)}>
                     {hideCompleted ? 'Show All' : 'Hide Completed'}
                 </button>
             </div>
+            <!-- Task List -->
             <ul class="tasks">
               {#each tasks as task (task._id)}
                   <Task task={task} />
               {/each}
             </ul>
         {:else}
+            <!-- If not logged in, prompt user for login -->
             <LoginForm />
         {/if}
     </div>

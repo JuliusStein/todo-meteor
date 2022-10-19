@@ -3,7 +3,7 @@ body {
   background-color: #315481;
   background-image: linear-gradient(to bottom, #315481, #918e82 100%);
   background-attachment: fixed;
-
+  color: #fff;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -85,7 +85,7 @@ button:focus {
   flex-direction: column;
   flex-grow: 1;
   overflow: auto;
-  background: white;
+  background: rgb(36, 36, 36);
 }
 
 .main::-webkit-scrollbar {
@@ -94,9 +94,13 @@ button:focus {
   background: inherit;
 }
 
+input{
+  color: white;
+}
+
 header {
-  background: #d2edf4;
-  background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
+  background: #002630;
+  background-image: linear-gradient(to bottom, #007292, #002630 100%);
   padding: 20px 15px 15px 15px;
   position: relative;
   box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
@@ -128,6 +132,7 @@ header {
   width: 100%;
   font-size: 1em;
   margin-right: 16px;
+  color: #fff;
 }
 
 .task-form > input:focus {
@@ -180,4 +185,8 @@ header {
 
   margin: 8px 16px 0;
   font-weight: bold;
+}
+
+button{
+  border-radius: 5px;
 }
