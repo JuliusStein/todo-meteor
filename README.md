@@ -4,7 +4,7 @@ A simple to-do app using Svelte and Meteor.
 The app is based on the [Meteor tutorial](https://svelte-tutorial.meteor.com/simple-todos/) for creating a simple Meteor to-do app using Svelte.
 
 ## Live Link
-To see the completed app running, visit [this link] (https://todo-jstein.meteorapp.com)
+To see the completed app running, visit [this site](https://todo-jstein.meteorapp.com)
 
 ## Getting started
 To get started, clone the repo, navigate to the enclosing folder, and enter `cd simple-todos-svelte` and then run `meteor npm install` to install the dependencies for the Svelte app.
